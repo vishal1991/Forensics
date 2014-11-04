@@ -1,4 +1,4 @@
-
+#!/usr/bin/python
 import optparse
 import whois
 import socket
@@ -30,16 +30,30 @@ def main():
 	kml_file = options.kmlfile
 	log = options.fail_log
 
-	if url_file == None or geo_file == None:
+	if url_file == None or geo_file == None or not os.path.isfile(url_file)  or not os.path.isfile(geo_file) :
 		print parser.usage
 		exit(0)
 
-	if os.path.isfile(report_file) or os.path.isfile(db_file) or os.path.isfile(kml_file):
-		print 'Output Filename already exists\nPlease provide unique Filename'
-		exit(0)
+	if report_file != None:
+		if os.path.isfile(report_file):
+			print 'Output Filename already exists\nPlease provide unique Filename'
+			exit(0)
+	if kml_file != None:
+		if os.path.isfile(kml_file):
+			print 'Output Filename already exists\nPlease provide unique Filename'
+			exit(0)
+	if db_file != None:
+		if os.path.isfile(db_file):
+			print 'Output Filename already exists\nPlease provide unique Filename'
+			exit(0)
+	if log != None:
+		if os.path.isfile(log):
+			print 'Output Filename already exists\nPlease provide unique Filename'
+			exit(0)
+	if log != None:
+		logfile = open(log,'wb')
 
 	fp = {}
-	logfile = open(log,'wb')
 	fd = open(url_file, 'r')
 	gi = pygeoip.GeoIP(geo_file)
 	city = ''
@@ -134,7 +148,10 @@ def main():
 				kml.save(kml_file)
 
 		except Exception, e:
-			logfile.write(str(url)+'\n')
+			try:
+				logfile.write(str(url)+'\n')
+			except Exception, e:
+				pass
 			
 
 
